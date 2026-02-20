@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Neon Interakcja</title>
+<title>Neon Interakcja Powtarzalna</title>
 <style>
 body{
   margin:0;
@@ -16,7 +16,7 @@ body{
   perspective:1200px;
 }
 
-/* napis */
+/* napis neon */
 .neon{
   font-size:100px;
   color:#ffff00;
@@ -27,13 +27,15 @@ body{
     0 0 20px #ffff00,
     0 0 40px #ffdd00,
     0 0 80px #ffdd00;
-  transition:transform 1.5s cubic-bezier(.2,.8,.2,1), opacity 1s;
+  display:inline-block; /* żeby klik było wszędzie w napisie */
+  transition: transform 1.5s cubic-bezier(.2,.8,.2,1), opacity 1s;
 }
 
-/* animacja po kliknięciu */
-.zoom{
-  transform:scale(8) rotateY(720deg) rotateX(360deg);
-  opacity:0;
+/* animacja przybliżenia i obrotu */
+@keyframes zoomAnim {
+  0% { transform: scale(1) rotateY(0deg) rotateX(0deg); opacity:1; }
+  50% { transform: scale(8) rotateY(360deg) rotateX(180deg); opacity:1; }
+  100% { transform: scale(8) rotateY(720deg) rotateX(360deg); opacity:0; }
 }
 
 /* panel */
@@ -43,6 +45,10 @@ body{
   transform:scale(.5);
   transition:all 1s ease;
   text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
 }
 
 .panel.show{
@@ -55,10 +61,14 @@ body{
   font-size:60px;
   color:#ffff00;
   text-shadow:0 0 15px #ffff00;
-  margin-bottom:30px;
 }
 
-/* input */
+/* input + przycisk */
+.input-group{
+  display:flex;
+  gap:10px;
+}
+
 input{
   padding:15px 25px;
   font-size:20px;
@@ -69,6 +79,30 @@ input{
   color:#ffff00;
   box-shadow:0 0 15px #ffff00 inset, 0 0 10px #ffff00;
 }
+
+button{
+  padding:15px 25px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  background:#222;
+  color:#ffff00;
+  cursor:pointer;
+  box-shadow:0 0 15px #ffff00;
+  transition:0.3s;
+}
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 25px #ffff00;
+}
+
+/* tekst końcowy */
+.final-text{
+  margin-top:20px;
+  font-size:40px;
+  color:#ffff00;
+  text-shadow:0 0 15px #ffff00;
+}
 </style>
 </head>
 <body>
@@ -77,20 +111,39 @@ input{
 
 <div id="panel" class="panel">
   <div class="question">Co robisz?</div>
-  <input type="text" placeholder="Napisz coś...">
+  <div class="input-group">
+    <input type="text" id="userInput" placeholder="Napisz coś...">
+    <button id="sendBtn">Wyślij</button>
+  </div>
+  <div class="final-text" id="finalText"></div>
 </div>
 
 <script>
 const hej = document.getElementById("hej");
 const panel = document.getElementById("panel");
+const sendBtn = document.getElementById("sendBtn");
+const finalText = document.getElementById("finalText");
 
-hej.addEventListener("click", () => {
-  hej.classList.add("zoom");
+// funkcja animacji przy kliknięciu
+hej.addEventListener("click", ()=>{
+  // reset animacji jeśli jest już w trakcie
+  hej.style.animation = "none";
+  hej.offsetHeight; // wymusza restart animacji
+  hej.style.animation = "zoomAnim 1.5s forwards";
+
+  // po animacji pokaż panel
+  setTimeout(()=>{
+    panel.classList.add("show");
+  },1500);
+});
+
+// kliknięcie przycisku Wyślij
+sendBtn.addEventListener("click", ()=>{
+  finalText.textContent = "Dobrze...";
 
   setTimeout(()=>{
-    hej.style.display="none";
-    panel.classList.add("show");
-  },1200);
+    finalText.textContent = "watch?v=4dUr6L-dKgo";
+  },1500);
 });
 </script>
 

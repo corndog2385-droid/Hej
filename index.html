@@ -2,79 +2,97 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Neonowy Napis z Piorunami</title>
+<title>Neon Interakcja</title>
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: black;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective: 1000px;
-    font-family: 'Arial', sans-serif;
-  }
+body{
+  margin:0;
+  height:100vh;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  font-family:Arial, sans-serif;
+  perspective:1200px;
+}
 
-  .neon-text {
-    font-size: 100px;
-    color: #ffff00;
-    text-transform: uppercase;
-    text-align: center;
-    position: relative;
-    text-shadow:
-      0 0 5px #ffff00,
-      0 0 10px #ffff00,
-      0 0 20px #ffff00,
-      0 0 40px #ffdd00,
-      0 0 80px #ffdd00;
-    animation: flicker 2s infinite;
-  }
+/* napis */
+.neon{
+  font-size:100px;
+  color:#ffff00;
+  cursor:pointer;
+  text-shadow:
+    0 0 5px #ffff00,
+    0 0 10px #ffff00,
+    0 0 20px #ffff00,
+    0 0 40px #ffdd00,
+    0 0 80px #ffdd00;
+  transition:transform 1.5s cubic-bezier(.2,.8,.2,1), opacity 1s;
+}
 
-  .neon-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: #ffff00;
-    text-shadow:
-      0 0 5px #ffff00,
-      0 0 10px #ffff00,
-      0 0 20px #ffff00;
-    transform: scaleY(-1);
-    opacity: 0.2;
-  }
+/* animacja po kliknięciu */
+.zoom{
+  transform:scale(8) rotateY(720deg) rotateX(360deg);
+  opacity:0;
+}
 
-  @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 22%, 24%, 55% { opacity: 0.4; }
-  }
+/* panel */
+.panel{
+  position:absolute;
+  opacity:0;
+  transform:scale(.5);
+  transition:all 1s ease;
+  text-align:center;
+}
 
-  .lightning {
-    position: absolute;
-    width: 2px;
-    height: 100%;
-    background: white;
-    opacity: 0;
-    animation: lightning 3s infinite;
-  }
+.panel.show{
+  opacity:1;
+  transform:scale(1);
+}
 
-  @keyframes lightning {
-    0%, 95%, 100% { opacity: 0; }
-    96% { opacity: 1; }
-    97% { opacity: 0; }
-  }
+/* pytanie */
+.question{
+  font-size:60px;
+  color:#ffff00;
+  text-shadow:0 0 15px #ffff00;
+  margin-bottom:30px;
+}
+
+/* input */
+input{
+  padding:15px 25px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  outline:none;
+  background:#111;
+  color:#ffff00;
+  box-shadow:0 0 15px #ffff00 inset, 0 0 10px #ffff00;
+}
 </style>
 </head>
 <body>
 
-<div class="neon-text" data-text="Hej">Hej</div>
+<div id="hej" class="neon">Hej</div>
 
-<div class="lightning" style="left: 10%; animation-delay: 0s;"></div>
-<div class="lightning" style="left: 40%; animation-delay: 1s;"></div>
-<div class="lightning" style="left: 70%; animation-delay: 2s;"></div>
+<div id="panel" class="panel">
+  <div class="question">Co robisz?</div>
+  <input type="text" placeholder="Napisz coś...">
+</div>
+
+<script>
+const hej = document.getElementById("hej");
+const panel = document.getElementById("panel");
+
+hej.addEventListener("click", () => {
+  hej.classList.add("zoom");
+
+  setTimeout(()=>{
+    hej.style.display="none";
+    panel.classList.add("show");
+  },1200);
+});
+</script>
 
 </body>
 </html>
